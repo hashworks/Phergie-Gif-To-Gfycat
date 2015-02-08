@@ -1,5 +1,5 @@
 {
-    "name": "hashworks/PhergieGifToGfycat",
+    "name": "hashworks/phergie-plugin-gif-to-gfycat",
     "description": "Phergie plugin to convert all posted GIF links into WEBM using Gfycat.com.",
     "keywords": [ "phergie", "irc", "bot", "plugin", "gif", "webm", "gfycat" ],
     "license": "GNU GPL v3.0",
