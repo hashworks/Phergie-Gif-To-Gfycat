@@ -15,6 +15,14 @@ use Phergie\Irc\Event\UserEvent as Event;
  */
 class Plugin extends AbstractPlugin {
 
+	private $prefix = '[GIF to WEBM] ';
+	private $limit = 10;
+
+	public function __construct($config = array()) {
+		if (isset($config['prefix'])) $this->prefix = $config['prefix'];
+		if (isset($config['limit'])) $this->limit = intval($config['limit']);
+	}
+
 	/**
 	 * @return array
 	 */
@@ -45,7 +53,7 @@ class Plugin extends AbstractPlugin {
 
 	public function handleURL (Event $event, Queue $queue) {
 		if (preg_match_all("/http[s]?:\/\/\S*\.gif\S*/i", $event->getMessage(), $matches)) {
-			$matches = array_splice($matches[0], 0, 5);
+			$matches = array_splice($matches[0], 0, $this->limit);
 			$linkCount = count($matches);
 			$webmLinks = array();
 
@@ -54,7 +62,7 @@ class Plugin extends AbstractPlugin {
 				if (count($webmLinks) == $linkCount) {
 					$string = join(' ', $webmLinks);
 					if (!empty($string)) {
-						$this->sendReply($event, $queue, "[GIF to WebM] " . $string);
+						$this->sendReply($event, $queue, $this->prefix . $string);
 					}
 				}
 			};

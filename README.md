@@ -19,5 +19,10 @@ See Phergie documentation for more information on
 // dependency
 new \WyriHaximus\Phergie\Plugin\Dns\Plugin,
 new \WyriHaximus\Phergie\Plugin\Http\Plugin(array('dnsResolverEvent' => 'dns.resolver')),
-new \hashworks\Phergie\Plugin\GifToGfycat\Plugin
+new \hashworks\Phergie\Plugin\GifToGfycat\Plugin(array(
+    // Optional. Sets the prefix for posted Gfycat links
+    'prefix' => '[GIF to WEBM] ',
+    // Optional. Sets the maximum number of links getting converted per PRIVMSG
+    'limit' => 10
+))
 ```
