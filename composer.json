@@ -1,0 +1,24 @@
+{
+    "name": "hashworks/PhergieGifToGfycat",
+    "description": "Phergie plugin to convert all posted GIF links into WEBM using Gfycat.com.",
+    "keywords": [ "phergie", "irc", "bot", "plugin", "gif", "webm", "gfycat" ],
+    "license": "GNU GPL v3.0",
+    "support": {
+        "email": "admin@hashworks.net",
+        "irc": "irc://irc.freenode.net/phergie",
+        "issues": "https://github.com/hashworks/PhergieGifToGfycat/issues",
+        "source": "https://github.com/hashworks/PhergieGifToGfycat"
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "phergie/phergie-irc-bot-react": "~1",
+        "phergie/phergie-irc-plugin-react-command": "~1",
+        "wyrihaximus/phergie-http": "~2"
+
+    },
+    "autoload": {
+        "psr-4": {
+            "hashworks\\Phergie\\Plugin\\GifToGfycat\\": "src"
+        }
+    }
+}
