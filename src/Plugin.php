@@ -79,9 +79,11 @@ class Plugin extends AbstractPlugin {
 							if (!empty($data) && ($data = json_decode($data, true)) !== NULL) {
 								array_map('trim', $data);
 								if (isset($data['gfyName']) && !empty($data['gfyName'])) {
-									$webmLinks[] = 'https://gfycat.com/' . $data['gfyName'];
-									$sendGeneratedLinks($linkCount, $webmLinks);
-									return;
+									if ((!isset($data['gfysie']) || !isset($data['gfysie'])) || ['gfysize'] < $data['gifSize']) {
+										$webmLinks[] = 'https://gfycat.com/' . $data['gfyName'];
+										$sendGeneratedLinks($linkCount, $webmLinks);
+										return;
+									}
 								}
 							}
 							// At this point no gfycat link was gathered, handle error
