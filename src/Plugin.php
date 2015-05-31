@@ -73,6 +73,8 @@ class Plugin extends AbstractPlugin {
 			};
 
 			foreach ($matches as $link) {
+					// Don't process .gifv links
+				if (strpos($link, '.gifv') !== false) continue;
 				$this->emitter->emit('http.request', [new Request([
 						'url'             => 'https://upload.gfycat.com/transcode?fetchUrl=' . rawurlencode($link),
 						'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
