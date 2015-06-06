@@ -80,13 +80,12 @@ class Plugin extends AbstractPlugin {
 						'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
 							if (!empty($data) && ($data = json_decode($data, true)) !== NULL) {
 								array_map('trim', $data);
-								if (isset($data['gfyName']) && !empty($data['gfyName'])) {
-									var_dump($data);
-									if (!isset($data['gfysie']) && isset($data['gfyName']) && $data['gfysize'] < $data['gifSize']) {
+								if (isset($data['gfyName']) && !empty($data['gfyName']) &&
+									isset($data['gfysize']) && isset($data['gifSize']) &&
+									$data['gfysize'] < $data['gifSize']) {
 										$webmLinks[] = 'https://gfycat.com/' . $data['gfyName'];
 										$sendGeneratedLinks($linkCount, $webmLinks);
 										return;
-									}
 								}
 							}
 							// At this point no gfycat link was gathered, handle error
