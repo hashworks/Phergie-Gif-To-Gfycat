@@ -79,7 +79,7 @@ class Plugin extends AbstractPlugin {
 						'url'             => 'https://upload.gfycat.com/transcode?fetchUrl=' . rawurlencode($link),
 						'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
 							if (!empty($data) && ($data = json_decode($data, true)) !== NULL) {
-								array_map('trim', $data);
+								$this->array_map_recusive('trim', $data);
 								if (isset($data['gfyName']) && !empty($data['gfyName']) &&
 									isset($data['gfysize']) && isset($data['gifSize']) &&
 									$data['gfysize'] < $data['gifSize']) {
@@ -95,6 +95,18 @@ class Plugin extends AbstractPlugin {
 				])]);
 			}
 		}
+	}
+
+	private function array_map_recusive($callback, $array) {
+		$new = array();
+		foreach ($array as $key => $val) {
+			if (is_array($val)) {
+				$new[$key] = $this->array_map_recusive($val, $callback);
+			} else {
+				$new[$key] = call_user_func($callback, $val);
+			}
+		}
+		return $new;
 	}
 
 }
