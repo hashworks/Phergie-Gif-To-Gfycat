@@ -78,8 +78,8 @@ class Plugin extends AbstractPlugin {
 				$this->emitter->emit('http.request', [new Request([
 						'url'             => 'https://upload.gfycat.com/transcode?fetchUrl=' . rawurlencode($link),
 						'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
-							if (!empty($data) && ($data = json_decode($data, true)) !== NULL) {
-								$this->array_map_recusive('trim', $data);
+							if (!empty($data) && is_array($data = json_decode($data, true))) {
+								$data = $this->array_map_recusive('trim', $data);
 								if (isset($data['gfyName']) && !empty($data['gfyName']) &&
 									isset($data['gfysize']) && isset($data['gifSize']) &&
 									$data['gfysize'] < $data['gifSize']) {
