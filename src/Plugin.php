@@ -67,37 +67,43 @@ class Plugin extends AbstractPlugin {
 				}
 			};
 
-			$errorHandler = function($linkCount, $webmLinks) use ($sendGeneratedLinks) {
+			$errorHandler = function(&$linkCount, $webmLinks) use ($sendGeneratedLinks) {
 				$linkCount--;
 				$sendGeneratedLinks($linkCount, $webmLinks);
 			};
 
 			foreach ($matches as $link) {
 					// Don't process .gifv links
-				if (strpos($link, '.gifv') !== false) continue;
-				$this->emitter->emit('http.request', [new Request([
-						'url'             => 'https://upload.gfycat.com/transcode?fetchUrl=' . rawurlencode($link),
-						'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
-							if (!empty($data) && is_array($data = json_decode($data, true))) {
-								$data = $this->array_map_recusive('trim', $data);
-								if (isset($data['gfyName']) && !empty($data['gfyName']) &&
-									isset($data['gfysize']) && isset($data['gifSize']) &&
-									$data['gfysize'] < $data['gifSize']) {
+				if (strpos($link, '.gifv') !== false) {
+					$errorHandler($linkCount, $webmLinks);
+				} else {
+					$this->emitter->emit('http.request', [new Request([
+							'url' => 'https://upload.gfycat.com/transcode?fetchUrl=' . rawurlencode($link),
+							'resolveCallback' => function ($data) use ($event, $queue, &$linkCount, &$webmLinks, $sendGeneratedLinks, $errorHandler) {
+								if (!empty($data) && is_array($data = json_decode($data, true))) {
+									$data = $this->array_map_recusive('trim', $data);
+									if (isset($data['gfyName']) && !empty($data['gfyName']) &&
+											isset($data['gfysize']) && isset($data['gifSize']) &&
+											$data['gfysize'] < $data['gifSize']
+									) {
 										$webmLinks[] = 'https://gfycat.com/' . $data['gfyName'];
 										$sendGeneratedLinks($linkCount, $webmLinks);
 										return;
+									}
 								}
+								// At this point no gfycat link was gathered, handle error
+								$errorHandler($linkCount, $webmLinks);
+							},
+							'rejectCallback' => function() use ($errorHandler, &$linkCount, &$webmLinks) {
+								$errorHandler($linkCount, $webmLinks);
 							}
-							// At this point no gfycat link was gathered, handle error
-							$errorHandler($linkCount, $webmLinks);
-						},
-						'rejectCallback'  => $errorHandler($linkCount, $webmLinks)
-				])]);
+					])]);
+				}
 			}
 		}
 	}
 
-	private function array_map_recusive($callback, $array) {
+	private function array_map_recusive($callback, array $array) {
 		$new = array();
 		foreach ($array as $key => $val) {
 			if (is_array($val)) {
