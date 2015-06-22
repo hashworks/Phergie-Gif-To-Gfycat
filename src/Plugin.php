@@ -107,7 +107,7 @@ class Plugin extends AbstractPlugin {
 		$new = array();
 		foreach ($array as $key => $val) {
 			if (is_array($val)) {
-				$new[$key] = $this->array_map_recusive($val, $callback);
+				$new[$key] = $this->array_map_recusive($callback, $val);
 			} else {
 				$new[$key] = call_user_func($callback, $val);
 			}
